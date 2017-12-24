@@ -67,6 +67,46 @@ void SerialGaussMethod(double **matrix, const int rows, double* result)
 	}
 }
 
+void ParallelGaussMethod(double **matrix, const int rows, double* result)
+{
+	int k;
+	double koef;
+
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+	for (k = 0; k < rows; ++k)
+	{
+		cilk_for(int i = k + 1; i < rows; ++i)
+		{
+			koef = -matrix[i][k] / matrix[k][k];
+
+			for(int j = k; j <= rows; ++j)
+			{
+				matrix[i][j] += koef * matrix[k][j];
+			}
+		}
+	}
+
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+
+	duration<double> duration = (t2 - t1);
+	cout << "Duration is: " << duration.count() << " seconds" << endl;
+
+	result[rows - 1] = matrix[rows - 1][rows] / matrix[rows - 1][rows - 1];
+
+	for (k = rows - 2; k >= 0; --k)
+	{
+		result[k] = matrix[k][rows];
+
+		//
+		for (int j = k + 1; j < rows; ++j)
+		{
+			result[k] -= matrix[k][j] * result[j];
+		}
+
+		result[k] /= matrix[k][k];
+	}
+}
 
 int main()
 {
@@ -90,7 +130,7 @@ int main()
 	test_matrix[2][0] = 2; test_matrix[2][1] = 10; test_matrix[2][2] = 9;  test_matrix[2][3] = 7;  test_matrix[2][4] = 40;
 	test_matrix[3][0] = 3; test_matrix[3][1] = 8;  test_matrix[3][2] = 9;  test_matrix[3][3] = 2;  test_matrix[3][4] = 37;*/
 
-	SerialGaussMethod(test_matrix, MATRIX_SIZE, result);
+	ParallelGaussMethod(test_matrix, MATRIX_SIZE, result);
 
 	for (i = 0; i < MATRIX_SIZE; ++i)
 	{
