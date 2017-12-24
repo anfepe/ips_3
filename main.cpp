@@ -3,7 +3,9 @@
 #include <cilk/cilk.h>
 #include <cilk/reducer_opadd.h>
 #include <chrono>
+#include <iostream>
 
+using namespace std;
 using namespace std::chrono;
 
 const int MATRIX_SIZE = 1500;
@@ -29,6 +31,8 @@ void SerialGaussMethod(double **matrix, const int rows, double* result)
 	int k;
 	double koef;
 
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
 	for (k = 0; k < rows; ++k)
 	{
 		for (int i = k + 1; i < rows; ++i)
@@ -41,6 +45,11 @@ void SerialGaussMethod(double **matrix, const int rows, double* result)
 			}
 		}
 	}
+
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+
+	duration<double> duration = (t2 - t1);
+	cout << "Duration is: " << duration.count() << " seconds" << endl;
 
 	result[rows - 1] = matrix[rows - 1][rows] / matrix[rows - 1][rows - 1];
 
@@ -65,35 +74,35 @@ int main()
 
 	int i;
 
-	const int test_matrix_lines = 4;
+	double **test_matrix = new double*[MATRIX_SIZE];
 
-	double **test_matrix = new double*[test_matrix_lines];
-
-	for (i = 0; i < test_matrix_lines; ++i)
+	/*for (i = 0; i < test_matrix_lines; ++i)
 	{
 		test_matrix[i] = new double[test_matrix_lines + 1];
-	}
+	}*/
 
-	double *result = new double[test_matrix_lines];
+	InitMatrix(test_matrix);
 
-	test_matrix[0][0] = 2; test_matrix[0][1] = 5;  test_matrix[0][2] = 4;  test_matrix[0][3] = 1;  test_matrix[0][4] = 20;
+	double *result = new double[MATRIX_SIZE];
+
+	/*test_matrix[0][0] = 2; test_matrix[0][1] = 5;  test_matrix[0][2] = 4;  test_matrix[0][3] = 1;  test_matrix[0][4] = 20;
 	test_matrix[1][0] = 1; test_matrix[1][1] = 3;  test_matrix[1][2] = 2;  test_matrix[1][3] = 1;  test_matrix[1][4] = 11;
 	test_matrix[2][0] = 2; test_matrix[2][1] = 10; test_matrix[2][2] = 9;  test_matrix[2][3] = 7;  test_matrix[2][4] = 40;
-	test_matrix[3][0] = 3; test_matrix[3][1] = 8;  test_matrix[3][2] = 9;  test_matrix[3][3] = 2;  test_matrix[3][4] = 37;
+	test_matrix[3][0] = 3; test_matrix[3][1] = 8;  test_matrix[3][2] = 9;  test_matrix[3][3] = 2;  test_matrix[3][4] = 37;*/
 
-	SerialGaussMethod(test_matrix, test_matrix_lines, result);
+	SerialGaussMethod(test_matrix, MATRIX_SIZE, result);
 
-	for (i = 0; i < test_matrix_lines; ++i)
+	for (i = 0; i < MATRIX_SIZE; ++i)
 	{
-		delete[]test_matrix[i];
+		delete[] test_matrix[i];
 	}
 
-	printf("Solution:\n");
+	//printf("Solution:\n");
 
-	for (i = 0; i < test_matrix_lines; ++i)
-	{
-		printf("x(%d) = %lf\n", i, result[i]);
-	}
+	//for (i = 0; i < MATRIX_SIZE; ++i)
+	//{
+	//	printf("x(%d) = %lf\n", i, result[i]);
+	//}
 
 	delete[] result;
 
