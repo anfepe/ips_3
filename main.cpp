@@ -99,7 +99,7 @@ void ParallelGaussMethod(double **matrix, const int rows, double* result)
 		result[k] = matrix[k][rows];
 
 		//
-		for (int j = k + 1; j < rows; ++j)
+		cilk_for (int j = k + 1; j < rows; ++j)
 		{
 			result[k] -= matrix[k][j] * result[j];
 		}
@@ -144,9 +144,9 @@ int main()
 	//	printf("x(%d) = %lf\n", i, result[i]);
 	//}
 
-	delete[] result;
-
 	getchar();
+
+	delete[] result;
 
 	return 0;
 }
