@@ -8,7 +8,7 @@
 using namespace std;
 using namespace std::chrono;
 
-const int MATRIX_SIZE = 1500;
+const int MATRIX_SIZE = 4;
 
 void InitMatrix(double** matrix)
 {
@@ -116,19 +116,19 @@ int main()
 
 	double **test_matrix = new double*[MATRIX_SIZE];
 
-	/*for (i = 0; i < test_matrix_lines; ++i)
+	for (i = 0; i < MATRIX_SIZE; ++i)
 	{
-		test_matrix[i] = new double[test_matrix_lines + 1];
-	}*/
+		test_matrix[i] = new double[MATRIX_SIZE + 1];
+	}
 
-	InitMatrix(test_matrix);
+	//InitMatrix(test_matrix);
 
 	double *result = new double[MATRIX_SIZE];
 
-	/*test_matrix[0][0] = 2; test_matrix[0][1] = 5;  test_matrix[0][2] = 4;  test_matrix[0][3] = 1;  test_matrix[0][4] = 20;
+	test_matrix[0][0] = 2; test_matrix[0][1] = 5;  test_matrix[0][2] = 4;  test_matrix[0][3] = 1;  test_matrix[0][4] = 20;
 	test_matrix[1][0] = 1; test_matrix[1][1] = 3;  test_matrix[1][2] = 2;  test_matrix[1][3] = 1;  test_matrix[1][4] = 11;
 	test_matrix[2][0] = 2; test_matrix[2][1] = 10; test_matrix[2][2] = 9;  test_matrix[2][3] = 7;  test_matrix[2][4] = 40;
-	test_matrix[3][0] = 3; test_matrix[3][1] = 8;  test_matrix[3][2] = 9;  test_matrix[3][3] = 2;  test_matrix[3][4] = 37;*/
+	test_matrix[3][0] = 3; test_matrix[3][1] = 8;  test_matrix[3][2] = 9;  test_matrix[3][3] = 2;  test_matrix[3][4] = 37;
 
 	ParallelGaussMethod(test_matrix, MATRIX_SIZE, result);
 
@@ -137,16 +137,15 @@ int main()
 		delete[] test_matrix[i];
 	}
 
-	//printf("Solution:\n");
+	printf("Parallel solution:\n");
 
-	//for (i = 0; i < MATRIX_SIZE; ++i)
-	//{
-	//	printf("x(%d) = %lf\n", i, result[i]);
-	//}
-
-	getchar();
+	for (i = 0; i < MATRIX_SIZE; ++i)
+	{
+		printf("x(%d) = %lf\n", i, result[i]);
+	}
 
 	delete[] result;
+	delete[] test_matrix;
 
 	return 0;
 }
